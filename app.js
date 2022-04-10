@@ -1,27 +1,39 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const api = require('./api')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
+const Joi = require('@hapi/joi')
+/* const session = require('express-session')
+const MongoStore = require("connect-mongo") */
+
 
 app.set('port', (process.env.PORT || 8081))
 
-app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-
+app.use(bodyParser.json())
+// routes Middleware
 app.use('/api', api)
 app.use(express.static('static'))
 
+app.get('/', (req, res, next) =>{
+  res.send('home')
+})
+
+
 app.use(morgan('dev'))
 
-app.use(function (req, res, next) {
+/* app.use(function (req, res, next) {
   const err = new Error('Not Found')
   err.status = 404
   res.json(err)
-})
+}) */
 
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost:27017/en-app')
+mongoose.connect(
+  process.env.DB_CONNECT
+)
 const db = mongoose.connection
 
 db.on('error', console.error.bind(console, 'connection error :'))

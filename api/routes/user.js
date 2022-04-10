@@ -36,7 +36,7 @@ module.exports = function (router) {
     const user = new User(req.body)
     user.save(function (err, user) {
       if (err) return console.log(err)
-      res.status(200).json()
+      res.status(200).json(user)
     })
   })
 
